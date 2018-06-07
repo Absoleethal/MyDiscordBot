@@ -74,7 +74,6 @@ namespace MyDiscordBot.Modules
         }
 
         [Command("secret")]
-
         public async Task SecretMsg([Remainder] string arg = "")
         {
             if (!UserIsMOD((SocketGuildUser)Context.User))
@@ -98,6 +97,13 @@ namespace MyDiscordBot.Modules
             var targetRole = user.Guild.GetRole(roleID);
             return user.Roles.Contains(targetRole);
         }
+        [Command("data")]
+        public async Task GetData()
+        {
 
+            await Context.Channel.SendMessageAsync("Data has: " + DataStorage.GetPairsCount() + " pairs.");
+            DataStorage.AddPairToStorage("Count" + DataStorage.GetPairsCount(), "TheCount" + DataStorage.GetPairsCount());
+        }
+        
     }
 }
