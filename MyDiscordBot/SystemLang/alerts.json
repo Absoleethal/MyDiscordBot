@@ -1,3 +1,4 @@
 {
-    "Help":"this will be for help description //json"
+  "Help": "this will be for help description //json",
+  "SECRET" : "...I AM SKYNET..." 
 }

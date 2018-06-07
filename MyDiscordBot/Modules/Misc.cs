@@ -5,7 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
-
+using Discord.WebSocket;
 
 namespace MyDiscordBot.Modules
 {
@@ -73,6 +73,31 @@ namespace MyDiscordBot.Modules
             await Context.Channel.SendMessageAsync(Utilities.GetAlert("Help")); //Reminder, change the alert json to input help descriptions
         }
 
+        [Command("secret")]
+
+        public async Task SecretMsg([Remainder] string arg = "")
+        {
+            if (!UserIsMOD((SocketGuildUser)Context.User))
+            {
+                await Context.Channel.SendMessageAsync(":X: You need to complete the Quest " + Context.User.Mention);
+                return;
+            }
+            var dmChannel = await Context.User.GetOrCreateDMChannelAsync();
+            await dmChannel.SendMessageAsync(Utilities.GetAlert("SECRET"));
+        }
+
+        private bool UserIsMOD(SocketGuildUser user)
+        {
+            //user.Guild.Roles
+            string targetRoleName = "MOD";
+            var result = from r in user.Guild.Roles
+                         where r.Name == targetRoleName
+                         select r.Id;
+            ulong roleID = result.FirstOrDefault();
+            if (roleID == 0) return false;
+            var targetRole = user.Guild.GetRole(roleID);
+            return user.Roles.Contains(targetRole);
+        }
 
     }
 }
