@@ -11,8 +11,11 @@ namespace MyDiscordBot
 {
     class Config
     {
+        //put your Discord bot token inside the "../Resources/config.json" file
         private const string configFolder = "Resources";
         private const string configFile = "config.json";
+
+
 
         public static BotConfig bot;
 
@@ -42,7 +45,7 @@ namespace MyDiscordBot
 
     public struct BotConfig
     {
-        public string token;
+        public string token; 
         public string cmdPrefix;
     }
 
