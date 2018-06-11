@@ -12,17 +12,24 @@ namespace MyDiscordBot.Modules
 {
     public class Misc : ModuleBase<SocketCommandContext>
     {
-        [Command("myStats")]
-        public async Task MyStats()
+        [Command("Stats")]
+        public async Task MyStats([Remainder] string arg = "")
         {
-            var account = UserAccounts.GetAccount(Context.User);
+            SocketUser target = null;
+            var mentionedUser = Context.Message.MentionedUsers.FirstOrDefault();
+
+            target = mentionedUser ?? Context.User;
+
+
+            var account = UserAccounts.GetAccount(target);
             var embed = new EmbedBuilder();
 
             embed.WithColor(new Color(128, 255, 0));
             embed.WithThumbnailUrl("https://vignette.wikia.nocookie.net/bighero6botfight/images/0/0a/0048.PNG/revision/latest?cb=20141107093851");
 
-            await Context.Channel.SendMessageAsync($"You have {account.XP} XP and {account.Points} points",false, embed);
+            await Context.Channel.SendMessageAsync($"{target.Username} has {account.XP} XP and {account.Points} points",false, embed);
         }
+      
 
         [Command("addXP")]
         [RequireUserPermission(GuildPermission.Administrator)]
@@ -38,6 +45,23 @@ namespace MyDiscordBot.Modules
             embed.WithThumbnailUrl("https://vignette.wikia.nocookie.net/bighero6botfight/images/0/0a/0048.PNG/revision/latest?cb=20141107093851");
 
             await Context.Channel.SendMessageAsync($"You gained {xp} XP.", false, embed);
+
+        }
+
+        [Command("addPoints")]
+        [RequireUserPermission(GuildPermission.Administrator)]
+        public async Task addPoints(uint points)
+        {
+            var account = UserAccounts.GetAccount(Context.User);
+            account.Points += points;
+            UserAccounts.SaveAccounts();
+
+            var embed = new EmbedBuilder();
+
+            embed.WithColor(new Color(128, 255, 0));
+            embed.WithThumbnailUrl("https://vignette.wikia.nocookie.net/bighero6botfight/images/0/0a/0048.PNG/revision/latest?cb=20141107093851");
+
+            await Context.Channel.SendMessageAsync($"You gained {points} XP.", false, embed);
         }
 
 
