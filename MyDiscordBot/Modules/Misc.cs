@@ -6,18 +6,48 @@ using System.Threading.Tasks;
 using Discord;
 using Discord.Commands;
 using Discord.WebSocket;
+using MyDiscordBot.Core.UserAccounts;
 
 namespace MyDiscordBot.Modules
 {
     public class Misc : ModuleBase<SocketCommandContext>
     {
-        
+        [Command("myStats")]
+        public async Task MyStats()
+        {
+            var account = UserAccounts.GetAccount(Context.User);
+            var embed = new EmbedBuilder();
+
+            embed.WithColor(new Color(128, 255, 0));
+            embed.WithThumbnailUrl("https://vignette.wikia.nocookie.net/bighero6botfight/images/0/0a/0048.PNG/revision/latest?cb=20141107093851");
+
+            await Context.Channel.SendMessageAsync($"You have {account.XP} XP and {account.Points} points",false, embed);
+        }
+
+        [Command("addXP")]
+        [RequireUserPermission(GuildPermission.Administrator)]
+        public async Task addXP(uint xp)
+        {
+            var account = UserAccounts.GetAccount(Context.User);
+            account.XP += xp;
+            UserAccounts.SaveAccounts();
+
+            var embed = new EmbedBuilder();
+
+            embed.WithColor(new Color(128, 255, 0));
+            embed.WithThumbnailUrl("https://vignette.wikia.nocookie.net/bighero6botfight/images/0/0a/0048.PNG/revision/latest?cb=20141107093851");
+
+            await Context.Channel.SendMessageAsync($"You gained {xp} XP.", false, embed);
+        }
+
+
 
         [Command("mank")]
         public async Task Mank()
         {
             var embed = new EmbedBuilder();
-            embed.WithTitle("Mank is bullied by: " +Context.User.Username);
+
+            embed.WithTitle("Mank was bullied by: " +Context.User.Username);
             embed.WithColor(new Color (128,255,0));
             embed.WithThumbnailUrl("https://vignette.wikia.nocookie.net/bighero6botfight/images/0/0a/0048.PNG/revision/latest?cb=20141107093851");
 
@@ -28,6 +58,7 @@ namespace MyDiscordBot.Modules
         public async Task Echo([Remainder] string message)
         {
             var embed = new EmbedBuilder();
+
             embed.WithTitle("Message by: " +Context.User.Username);
             embed.WithDescription(message);
             embed.WithColor(new Color(128, 255, 0));
@@ -46,6 +77,7 @@ namespace MyDiscordBot.Modules
             string selection = options[r.Next(0, options.Length)];
 
             var embed = new EmbedBuilder();
+
             embed.WithTitle("Choice for " + Context.User.Username);
             embed.WithDescription(selection);
             embed.WithColor(new Color(128, 255, 0));
@@ -59,6 +91,7 @@ namespace MyDiscordBot.Modules
         public async Task Readit([Remainder]string message)
         {
             var embed = new EmbedBuilder();
+
             embed.WithDescription(message);
             embed.WithColor(new Color(128, 255, 0));
             embed.WithThumbnailUrl("https://vignette.wikia.nocookie.net/bighero6botfight/images/0/0a/0048.PNG/revision/latest?cb=20141107093851");
